@@ -32,7 +32,7 @@ module ChunkyCSS
 
       while !scanner.eos? do
         if scanner.scan(/@media (.*?){/)
-          current_bucket = scanner[1].chop
+          current_bucket = scanner[1].strip
           indent += 1
           inside_media = true
         end

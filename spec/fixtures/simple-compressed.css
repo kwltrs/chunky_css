@@ -1,0 +1,1 @@
+.rule1{color: red;}.rule2{color: red;}@media screen{.rule3{color: green;}.rule4{color: green;}}@media screen and (max-width: 100px){.rule5{color: blue;}.rule6{color: blue;}}.rule7{color: red;}
