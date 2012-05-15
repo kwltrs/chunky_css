@@ -1,6 +1,6 @@
 # ChunkyCSS
 
-TODO: Write a gem description
+Split CSS into chunks by @media.
 
 ## Installation
 
@@ -18,7 +18,15 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'chunky_css'
+
+splitter = ChunkyCSS.split(css_str)
+splitter.media  # e.g ["all", "screen and (max-width: 1000px)"]
+splitter.css_for_media("all") # e.g. "body { color:..."
+
+```
+
 
 ## Contributing
 
