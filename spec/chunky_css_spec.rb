@@ -37,3 +37,22 @@ describe ChunkyCSS::Splitter do
     end
   end
 end
+
+describe ChunkyCSS::Grouper do
+  context "simple-compressed.css" do
+    grouper = ChunkyCSS::Grouper.new(fixture("simple-compressed.css"))
+    css = grouper.grouped_css
+
+    it "starts with global rules without @media" do
+      css.should start_with(".rule1{color: red;}.rule2{color: red;}.rule7{color: red;}")
+    end
+
+    it "has a 'screen' entry" do
+      css.should include("@media screen{")
+    end
+
+    it "has a 'screen and max-width' entry" do
+      css.should include("@media screen and (max-width: 100px){")
+    end
+  end
+end

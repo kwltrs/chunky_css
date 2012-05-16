@@ -3,24 +3,15 @@ require "strscan"
 
 module ChunkyCSS
   def self.split(css)
-    return Splitter.new(css)
+    Splitter.new(css)
   end
 
-  class Splitter
-    def initialize(css)
-      @buckets = parse(css)
-    end
+  def self.group(css)
+    Grouper.new(css).grouped_css
+  end
 
-    def media
-      @buckets.keys
-    end
 
-    def css_for_media(media)
-      @buckets[media]
-    end
-
-    private
-
+  module Parser
     def parse(css)
       buckets = {}
 
@@ -55,6 +46,30 @@ module ChunkyCSS
       end
 
       return buckets
+    end
+  end
+
+  class Splitter
+    include Parser
+
+    def initialize(css)
+      @buckets = parse(css)
+    end
+
+    def media
+      @buckets.keys
+    end
+
+    def css_for_media(media)
+      @buckets[media]
+    end
+  end
+
+  class Grouper < Splitter
+    def grouped_css
+      [@buckets["all"]].concat(@buckets.keys.reject{|key| key=="all"}.map {|key|
+        "@media %s{%s}"%[key, @buckets[key]]
+      }).join("\n")
     end
   end
 end

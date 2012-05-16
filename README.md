@@ -25,6 +25,8 @@ splitter = ChunkyCSS.split(css_str)
 splitter.media  # e.g ["all", "screen and (max-width: 1000px)"]
 splitter.css_for_media("all") # e.g. "body { color:..."
 
+
+css = ChunkyCSS.group(css_str)
 ```
 
 
