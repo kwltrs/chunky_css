@@ -56,3 +56,51 @@ describe ChunkyCSS::Grouper do
     end
   end
 end
+
+describe ChunkyCSS::MediaQuery do
+  example "all" do
+    mq = ChunkyCSS::MediaQuery.new example.metadata[:description]
+
+    mq.type.should eq("all")
+    mq.features.should be_an_instance_of(Hash)
+    mq.features.should be_empty
+  end
+
+  example "screen and (max-width: 300px)" do
+    mq = ChunkyCSS::MediaQuery.new example.metadata[:description]
+
+    mq.type.should eq("screen")
+    mq.features.keys.length.should eq(1)
+    mq.features.keys.should include("max-width")
+    mq.features["max-width"].should eq("300px")
+  end
+
+  example "print and (max-width: 400px) and (min-width: 200px)" do
+    mq = ChunkyCSS::MediaQuery.new example.metadata[:description]
+
+    mq.type.should eq("print")
+    mq.features.keys.length.should eq(2)
+    mq.features["min-width"].should eq("200px")
+    mq.features["max-width"].should eq("400px")
+  end
+
+  example "screen and (width: 100px) and (min-width: 5px) and (max-width: 123456px)" do
+    mq = ChunkyCSS::MediaQuery.new example.metadata[:description]
+
+    mq.type.should eq("screen")
+    mq.features.keys.length.should eq(3)
+    mq.features["width"].should eq("100px")
+    mq.features["min-width"].should eq("5px")
+    mq.features["max-width"].should eq("123456px")
+  end
+
+  example "    screen and (width:100px)    and  (min-width:   5px)and(max-width : 123456 px)   " do
+    mq = ChunkyCSS::MediaQuery.new example.metadata[:description]
+
+    mq.type.should eq("screen")
+    mq.features.keys.length.should eq(3)
+    mq.features["width"].should eq("100px")
+    mq.features["min-width"].should eq("5px")
+    mq.features["max-width"].should eq("123456px")
+  end
+end

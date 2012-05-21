@@ -71,4 +71,32 @@ module ChunkyCSS
       }).join("\n")
     end
   end
+
+
+  module RegEx
+    TYPE = /(all|screen|print)/
+    FEATURE_WITH_LENGTH = /\((((min|max)-)?width\s*:\s*\d+\s*px)\)/
+  end
+
+  class MediaQuery
+    attr_reader :type
+    attr_reader :features
+    def initialize(querystr)
+      @features = {}
+      @type = ""
+
+      scanner = StringScanner.new(querystr)
+
+      while !scanner.eos? do
+        if scanner.scan RegEx::TYPE
+          @type = scanner[1]
+        elsif scanner.scan RegEx::FEATURE_WITH_LENGTH
+          (key, value) = scanner[1].split(/\s*:\s*/)
+          @features[key] = value.gsub(/\s/, '')
+        else
+          scanner.getch
+        end
+      end
+    end
+  end
 end
