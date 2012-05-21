@@ -1,4 +1,3 @@
-require "chunky_css/version"
 require "strscan"
 
 module ChunkyCSS

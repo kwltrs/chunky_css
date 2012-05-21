@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/chunky_css/version', __FILE__)
+require 'semver'
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Kristofer Walters"]
@@ -15,7 +15,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "chunky_css"
   gem.require_paths = ["lib"]
-  gem.version       = ChunkyCSS::VERSION
+  gem.version       = SemVer.find.format("%M.%m.%p%s")
 
   gem.add_development_dependency "rspec"
+  gem.add_development_dependency "semver2"
 end
