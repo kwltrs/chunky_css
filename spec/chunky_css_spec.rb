@@ -104,3 +104,25 @@ describe ChunkyCSS::MediaQuery do
     mq.features["max-width"].should eq("123456px")
   end
 end
+
+describe ChunkyCSS::MediaQuery, "#<=>" do
+  example "both screen and different max-width" do
+    mq1 = ChunkyCSS::MediaQuery.new "screen and (max-width: 200px)"
+    mq2 = ChunkyCSS::MediaQuery.new "screen and (max-width: 300px)"
+    (mq1 <=> mq2).should eq(-1)
+    (mq2 <=> mq1).should eq(1)
+
+    mq1.should be < mq2
+    mq2.should be > mq1
+  end
+
+  example "both screen and only one with max-width" do
+    mq1 = ChunkyCSS::MediaQuery.new "screen"
+    mq2 = ChunkyCSS::MediaQuery.new "screen and (max-width: 300px)"
+    (mq1 <=> mq2).should eq(-1)
+    (mq2 <=> mq1).should eq(1)
+
+    mq1.should be < mq2
+    mq2.should be > mq1
+  end
+end

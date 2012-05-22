@@ -79,6 +79,8 @@ module ChunkyCSS
   end
 
   class MediaQuery
+    include Comparable 
+
     attr_reader :type
     attr_reader :features
     def initialize(querystr)
@@ -97,6 +99,10 @@ module ChunkyCSS
           scanner.getch
         end
       end
+    end
+
+    def <=>(other)
+      @features["max-width"].to_i <=> other.features["max-width"].to_i
     end
   end
 end
