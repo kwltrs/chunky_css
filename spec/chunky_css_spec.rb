@@ -52,7 +52,7 @@ describe ChunkyCSS::Grouper do
     end
 
     it "has a 'screen and max-width' entry" do
-      css.should include("@media screen and (max-width: 100px){")
+      css.should include("@media screen and (max-width:100px){")
     end
   end
 end
@@ -170,5 +170,35 @@ describe ChunkyCSS::MediaQuery, "#<=>" do
 
     mq1.should be < mq2
     mq2.should be > mq1
+  end
+end
+
+describe ChunkyCSS::MediaQuery, "media_description" do
+  ["all", "screen", "screen and (max-width:400px)", "screen and (max-width:300px) and (min-width:200px)"].each do |query|
+    example query do
+      mq = ChunkyCSS::MediaQuery.new( example.metadata[:description] )
+      mq.media_description.should eq( example.metadata[:description] )
+    end
+  end
+end
+
+describe ChunkyCSS::MediaQuery, "#to_css" do
+  example "media all with some rules" do
+    mq = ChunkyCSS::MediaQuery.new "all"
+    mq.css_rules = "body{color:red;}"
+
+    mq.to_css.should eq("body{color:red;}")
+  end
+
+  example "media screen with some rules" do
+    mq = ChunkyCSS::MediaQuery.new "screen"
+    mq.css_rules = "body{color:red;}"
+    mq.to_css.should eq("@media screen{body{color:red;}}")
+  end
+
+  example "media screen and max-width with some rules" do
+    mq = ChunkyCSS::MediaQuery.new "screen and (max-width:400px)"
+    mq.css_rules = "body{color:red;}"
+    mq.to_css.should eq("@media screen and (max-width:400px){body{color:red;}}")
   end
 end

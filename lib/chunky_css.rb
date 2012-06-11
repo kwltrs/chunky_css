@@ -40,8 +40,8 @@ module ChunkyCSS
           end 
         end
 
-        buckets[current_bucket] ||= ""
-        buckets[current_bucket] += char
+        buckets[current_bucket] ||= MediaQuery.new(current_bucket)
+        buckets[current_bucket].css_rules += char
       end
 
       return buckets
@@ -60,15 +60,13 @@ module ChunkyCSS
     end
 
     def css_for_media(media)
-      @buckets[media]
+      (@buckets.has_key? media) ? @buckets[media].css_rules : nil
     end
   end
 
   class Grouper < Splitter
     def grouped_css
-      [@buckets["all"]].concat(@buckets.keys.reject{|key| key=="all"}.map {|key|
-        "@media %s{%s}"%[key, @buckets[key]]
-      }).join("\n")
+      @buckets.values.sort.map{|mq| mq.to_css }.join("\n")
     end
   end
 
@@ -83,9 +81,12 @@ module ChunkyCSS
 
     attr_reader :type
     attr_reader :features
+    attr_accessor :css_rules
+
     def initialize(querystr)
       @features = {}
-      @type = ""
+      @type = "all"
+      @css_rules = ""
 
       scanner = StringScanner.new(querystr)
 
@@ -112,6 +113,20 @@ module ChunkyCSS
       end
 
       d
+    end
+
+    def media_description
+      [ @type ].concat( @features.keys.map {|key|
+        "(%s:%s)"%[key, @features[key]]
+      } ).join(" and ")
+    end
+
+    def to_css
+      if @type == "all" && @features.empty?
+        @css_rules
+      else
+        "@media %s{%s}"%[media_description, @css_rules]
+      end
     end
   end
 end
