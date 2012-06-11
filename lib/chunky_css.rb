@@ -21,7 +21,7 @@ module ChunkyCSS
       inside_media = false
 
       while !scanner.eos? do
-        if scanner.scan(/@media (.*?){/)
+        if scanner.scan(/@media (.*?)\{/)
           current_bucket = scanner[1].strip
           indent += 1
           inside_media = true
