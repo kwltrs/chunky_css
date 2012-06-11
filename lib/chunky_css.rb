@@ -102,7 +102,16 @@ module ChunkyCSS
     end
 
     def <=>(other)
-      @features["max-width"].to_i <=> other.features["max-width"].to_i
+      d = @features["max-width"].to_i <=> other.features["max-width"].to_i
+
+      if (d == 0)
+        my_min_width, other_min_width = [@features, other.features].map{|f| f["min-width"].to_i}
+
+        d = other_min_width <=> my_min_width
+        d *= -1  if [my_min_width, other_min_width].include?(0)
+      end
+
+      d
     end
   end
 end

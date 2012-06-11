@@ -109,6 +109,7 @@ describe ChunkyCSS::MediaQuery, "#<=>" do
   example "both screen and different max-width" do
     mq1 = ChunkyCSS::MediaQuery.new "screen and (max-width: 200px)"
     mq2 = ChunkyCSS::MediaQuery.new "screen and (max-width: 300px)"
+
     (mq1 <=> mq2).should eq(-1)
     (mq2 <=> mq1).should eq(1)
 
@@ -119,6 +120,51 @@ describe ChunkyCSS::MediaQuery, "#<=>" do
   example "both screen and only one with max-width" do
     mq1 = ChunkyCSS::MediaQuery.new "screen"
     mq2 = ChunkyCSS::MediaQuery.new "screen and (max-width: 300px)"
+
+    (mq1 <=> mq2).should eq(-1)
+    (mq2 <=> mq1).should eq(1)
+
+    mq1.should be < mq2
+    mq2.should be > mq1
+  end
+
+  example "both screen and different min-width" do
+    mq1 = ChunkyCSS::MediaQuery.new "screen and (min-width: 300px)"
+    mq2 = ChunkyCSS::MediaQuery.new "screen and (min-width: 200px)"
+
+    (mq1 <=> mq2).should eq(-1)
+    (mq2 <=> mq1).should eq(1)
+
+    mq1.should be < mq2
+    mq2.should be > mq1
+  end
+
+  example "both screen and only one with min-width" do
+    mq1 = ChunkyCSS::MediaQuery.new "screen"
+    mq2 = ChunkyCSS::MediaQuery.new "screen and (min-width: 300px)"
+
+    (mq1 <=> mq2).should eq(-1)
+    (mq2 <=> mq1).should eq(1)
+
+    mq1.should be < mq2
+    mq2.should be > mq1
+  end
+
+  example "both screen, both same max-width and different min-width" do
+    mq1 = ChunkyCSS::MediaQuery.new "screen and (max-width:400px) and (min-width: 300px)"
+    mq2 = ChunkyCSS::MediaQuery.new "screen and (max-width:400px) and (min-width: 200px)"
+
+    (mq1 <=> mq2).should eq(-1)
+    (mq2 <=> mq1).should eq(1)
+
+    mq1.should be < mq2
+    mq2.should be > mq1
+  end
+
+  example "both screen, both same max-width and only one with min-width" do
+    mq1 = ChunkyCSS::MediaQuery.new "screen and (max-width:400px)"
+    mq2 = ChunkyCSS::MediaQuery.new "screen and (max-width:400px) and (min-width: 300px)"
+
     (mq1 <=> mq2).should eq(-1)
     (mq2 <=> mq1).should eq(1)
 
